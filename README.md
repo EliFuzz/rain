@@ -7,7 +7,7 @@ This is a Mac OS app for generating Menu Bar apps written in any programming lan
 
 ## Installation
 
-- [Download app](https://yarnpkg.com/)
+- [Download latest app](https://github.com/EliFuzz/rain/releases/)
 - Run **rain.app**
 - ⛩ icon will be shown in Menu Bar
 
