@@ -1,4 +1,4 @@
-<h1 align="center">R A I N</h1>
+<h1 align="center">⛩ R A I N</h1>
 <p align="center">Make Mac apps easy. Your only limit is YOU</p>
 
 ## Description
