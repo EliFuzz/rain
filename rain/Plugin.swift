@@ -33,30 +33,35 @@ class Plugin {
     }
 
     @objc private func initialize() {
-        let output = referenceScript.executeScript(pluginFilename: name)
-        var lines = output.components(separatedBy: CharacterSet.newlines).filter { $0 != "" }
+        DispatchQueue.global(qos: .background).async {
+            self.referenceUI.menu?.addItem(NSMenuItem(title: "Updating", action: nil, keyEquivalent: ""))
+            let output = self.referenceScript.executeScript(pluginFilename: self.name)
+            var lines = output.components(separatedBy: CharacterSet.newlines).filter { $0 != "" }
 
-        if lines.capacity <= 0 {
-            return
-        }
+            if lines.capacity <= 0 {
+                return
+            }
 
-        referenceUI.button?.title = lines.removeFirst()
-        lines.append("[separator]")
-        lines.append("[update]")
+            DispatchQueue.main.async {
+                self.referenceUI.button?.title = lines.removeFirst()
+                lines.append("[separator]")
+                lines.append("[update]")
 
-        let ruleFactory = RuleFactory()
-        referenceUI.menu = NSMenu()
-        var prevLine = ""
-        for line in lines {
-            let menuItem: MenuItem = ruleFactory.process(plugin: self, action: action, prevLine: prevLine, line: line)
-            prevLine = line
+                let ruleFactory = RuleFactory()
+                self.referenceUI.menu = NSMenu()
+                var prevLine = ""
+                for line in lines {
+                    let menuItem: MenuItem = ruleFactory.process(plugin: self, action: self.action, prevLine: prevLine, line: line)
+                    prevLine = line
 
-            if menuItem.getMenuItem() != nil {
-                referenceUI.menu?.addItem(menuItem.getMenuItem()!)
+                    if menuItem.getMenuItem() != nil {
+                        self.referenceUI.menu?.addItem(menuItem.getMenuItem()!)
+                    }
+                }
+
+                self.notify(lines: lines)
             }
         }
-
-        notify(lines: lines)
     }
 
     private func notify(lines: [String]) {
